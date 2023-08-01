@@ -20,6 +20,7 @@
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@pinia/nuxt": "^0.4.11",
+    "copy-to-clipboard": "^3.3.3",
     "element-plus": "^2.3.8",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",

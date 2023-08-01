@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
 	devtools: {enabled: true},
 	modules: ['@element-plus/nuxt', '@pinia/nuxt'],
+	css:['@/assets/css/iconfont.css'],
 	pinia: {
 		autoImports: [
 			'defineStore', // import { defineStore } from 'pinia'

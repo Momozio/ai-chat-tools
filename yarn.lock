@@ -932,7 +932,7 @@
 
 "@pinia/nuxt@^0.4.11":
   version "0.4.11"
-  resolved "https://registry.npmmirror.com/@pinia/nuxt/-/nuxt-0.4.11.tgz#1b3f728ae112d45deff5971376e05b8a8d64f720"
+  resolved "https://registry.npmmirror.com/@pinia/nuxt/-/nuxt-0.4.11.tgz"
   integrity sha512-bhuNFngJpmBCdAqWguezNJ/oJFR7wvKieqiZrmmdmPR07XjsidAw8RLXHMZE9kUm32M9E6T057OBbG/22jERTg==
   dependencies:
     "@nuxt/kit" "^3.5.0"
@@ -2062,6 +2062,13 @@ cookie-es@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/cookie-es/-/cookie-es-1.0.0.tgz"
   integrity sha512-mWYvfOLrfEc996hlKcdABeIiPHUPC6DM2QYZdGGOvhOTbA3tjm2eBwqlJpoFdjC89NI4Qt6h0Pu06Mp+1Pj5OQ==
+
+copy-to-clipboard@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.npmmirror.com/copy-to-clipboard/-/copy-to-clipboard-3.3.3.tgz#55ac43a1db8ae639a4bd99511c148cdd1b83a1b0"
+  integrity sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==
+  dependencies:
+    toggle-selection "^1.0.6"
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -4592,7 +4599,7 @@ pify@^3.0.0:
 
 pinia@>=2.1.0, pinia@^2.1.6:
   version "2.1.6"
-  resolved "https://registry.npmmirror.com/pinia/-/pinia-2.1.6.tgz#e88959f14b61c4debd9c42d0c9944e2875cbe0fa"
+  resolved "https://registry.npmmirror.com/pinia/-/pinia-2.1.6.tgz"
   integrity sha512-bIU6QuE5qZviMmct5XwCesXelb5VavdOWKWaB17ggk++NUwQWWbP5YnsONTk3b752QkW9sACiR81rorpeOMSvQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
@@ -5575,6 +5582,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+toggle-selection@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmmirror.com/toggle-selection/-/toggle-selection-1.0.6.tgz#6e45b1263f2017fa0acc7d89d78b15b8bf77da32"
+  integrity sha512-BiZS+C1OS8g/q2RRbJmy59xpyghNBqrr6k5L/uKBGRsTfxmu3ffiRnd8mlGPUVayg8pvfi5urfnu8TU7DVOkLQ==
+
 toidentifier@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/toidentifier/-/toidentifier-1.0.1.tgz"
@@ -5817,7 +5829,7 @@ util@^0.12.0:
 
 uuid@^9.0.0:
   version "9.0.0"
-  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.0.tgz"
   integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 validate-npm-package-license@^3.0.4:
