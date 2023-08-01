@@ -77,7 +77,7 @@ const getMarkdown = (content: string): string => {
 const state = ref<'loading' | 'stop' | 'wait'>('wait');
 
 /** 提交chat内容 */
-const chatValue = ref<string>('使用python写一个生成随机数的函数');
+const chatValue = ref<string>('');
 
 /** 聊天列表 */
 const chatList = reactive<Ichat[]>([
