@@ -2,4 +2,21 @@
 export default defineNuxtConfig({
 	devtools: {enabled: true},
 	modules: ['@element-plus/nuxt', '@pinia/nuxt'],
+	pinia: {
+		autoImports: [
+			'defineStore', // import { defineStore } from 'pinia'
+		],
+	},
+	elementPlus: {
+		importStyle: 'scss',
+	},
+	vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/assets/scss/element.scss" as element;`,
+        },
+      },
+    },
+  },
 });

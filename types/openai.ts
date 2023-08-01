@@ -19,6 +19,7 @@ interface Delta {
 
 /** 聊天格式 type */
 export type Ichat = {
+  id?:string;
 	role: string;
 	content: string;
 };

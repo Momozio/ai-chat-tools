@@ -1,16 +1,19 @@
 <template>
 	<div class="ai-chat">
+		<!-- 工具栏 -->
+		<div class="tool-box">
+			<!-- 模型选择 -->
+			<div class="select-box">
+				<span class="select-tip">模型</span>
+				<el-select v-model="chatConfig.model" placeholder="请选择模型">
+					<el-option v-for="model in models" :key="model" :value="model" :label="model"></el-option>
+				</el-select>
+			</div>
+		</div>
+		<!-- chat 列表 -->
 		<div class="chat-list-box">
 			<!-- chat item -->
-			<div class="chat-item" :class="chat.role" v-for="(chat, index) in chatList" :key="index">
-				<!-- 头像 -->
-				<div class="chat-avatar">
-					<img v-if="chat.role == 'system'" src="/images/chatgpt.png" alt="" />
-					<img v-if="chat.role == 'user'" src="/images/user.png" alt="" />
-				</div>
-				<!-- markdown 内容 -->
-				<div class="markdown-body chat-content" v-html="getMarkdown(chat.content)"></div>
-			</div>
+			<ChatItem :chatData="chat" v-for="(chat, index) in chatList" :key="index" />
 		</div>
 		<!-- 底部输入框 -->
 		<div class="bottom-box">
@@ -19,13 +22,12 @@
 				<el-button
 					@click="submitChat"
 					v-if="state == 'stop' || state == 'wait'"
-					color="#333"
 					size="large"
-					>提交</el-button
+					type="primary"
 				>
-				<el-button @click="endChat" v-if="state == 'loading'" color="#333" size="large"
-					>暂停</el-button
-				>
+					提交
+				</el-button>
+				<el-button @click="endChat" v-if="state == 'loading'" size="large">暂停</el-button>
 			</div>
 		</div>
 	</div>
@@ -34,44 +36,22 @@
 <script setup lang="ts">
 import {ElMessage} from 'element-plus';
 import {onMounted, reactive, ref} from 'vue';
-import createMarkdownIt from 'markdown-it';
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {Ichat, IchatResult} from '@/types/openai';
+import {useChatConfigStore} from '@/store/config';
+import ChatItem from '@/components/chatItem.vue';
+import {v4 as uuidv4} from 'uuid';
 import 'github-markdown-css';
-import 'highlight.js/styles/atom-one-dark.css';
-import hljs from 'highlight.js';
-// import ';
+import {storeToRefs} from 'pinia';
+
+/** config store */
+const chatConfigStore = useChatConfigStore();
+const {chatConfig} = storeToRefs(chatConfigStore);
+
 /** key */
 const key: string = '4XgFUI0QooHS8Y_KnOWcT717J88bfhGuIZfqZ3KqT7E';
 /** api url */
 const apiUrl: string = 'https://chimeragpt.adventblocks.cc/api/v1/chat/completions';
-
-/** 初始化markdown It */
-const markdownIt: any = createMarkdownIt({
-	typographer: true,
-	xhtmlOut: true,
-	linkify: true,
-	// 高亮设置
-	highlight: (code: string, lang: string) => {
-		if (lang && hljs.getLanguage(lang)) {
-			try {
-				return (
-					'<pre class="hljs cus-hljs"><code>' +
-					hljs.highlight(lang, code, true).value +
-					'</code></pre>'
-				);
-			} catch (__) {}
-		}
-		return (
-			'<pre class="hljs cus-hljs"><code>' + markdownIt.utils.escapeHtml(code) + '</code></pre>'
-		);
-	},
-});
-
-/** 将文本经由markdownIt处理 */
-const getMarkdown = (content: string): string => {
-	return markdownIt.render(content);
-};
 
 /** 运行状态 */
 const state = ref<'loading' | 'stop' | 'wait'>('wait');
@@ -93,10 +73,15 @@ const submitChat = () => {
 	}
 
 	// 追加用户对话
-	chatList.push({role: 'user', content: message});
+	chatList.push({id: uuidv4(), role: 'user', content: message});
 
 	// 最近的一组对话
-	let messages: Ichat[] = chatList.slice(-3);
+	let messages: Ichat[] = chatList.slice(-3).map((chat) => {
+		return {
+			content: chat.content,
+			role: chat.role,
+		};
+	});
 
 	// 发送chat
 	sendChat([...messages]);
@@ -114,54 +99,78 @@ const endChat = () => {
 const sendChat = async (messages: Ichat[]) => {
 	state.value = 'loading';
 	const ctrl = new AbortController();
-	fetchEventSource(apiUrl, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${key}`,
-		},
-		body: JSON.stringify({
-			model: 'gpt-3.5-turbo',
-			messages,
-			stream: true,
-			frequency_penalty: 0,
-			presence_penalty: 0,
-			temperature: 0.5,
-			top_p: 1,
-		}),
-		signal: ctrl.signal,
-		async onopen() {
-			chatList.push({role: 'system', content: ''});
-		},
-		onmessage(ev) {
-			// 返回内容
-			const dataJson: IchatResult = JSON.parse(ev.data);
-			const content = dataJson.choices[0].delta.content;
+	try {
+		fetchEventSource(apiUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${key}`,
+			},
+			body: JSON.stringify({
+				messages,
+				...chatConfigStore.chatConfig,
+			}),
+			signal: ctrl.signal,
+			async onopen() {
+				chatList.push({role: 'system', content: ''});
+			},
+			onmessage(ev) {
+				if (ev.data === '[DONE]') {
+					state.value = 'stop';
+					ctrl.abort();
+				}
+				// 返回内容
+				const dataJson: IchatResult = JSON.parse(ev.data);
+				const content = dataJson.choices[0].delta.content;
 
-			// 校验
-			if (state.value === 'stop' || dataJson.choices[0].finish_reason || content == undefined) {
-				state.value = 'stop';
+				// 校验
+				if (state.value === 'stop' || dataJson.choices[0].finish_reason || content == undefined) {
+					state.value = 'stop';
+					ctrl.abort();
+				} else {
+					// 追加
+					chatList[chatList.length - 1].content += content;
+					// 滚动到底部
+					nextTick(() => {
+						window.scrollTo(0, document.body.scrollHeight);
+					});
+				}
+			},
+			onclose() {
+				// 最后一条重新设置
 				ctrl.abort();
-			} else {
-				// 追加
-				chatList[chatList.length - 1].content += content;
-				// 滚动到底部
-				nextTick(() => {
-					window.scrollTo(0, document.body.scrollHeight);
-				});
-			}
-		},
-		onclose() {
-			state.value = 'stop';
-		},
-		onerror(err) {
-			ElMessage.error(err);
-			state.value = 'stop';
-			// 最后一条重新设置
-			chatList[chatList.length - 1].content = 'network error';
-		},
-	});
+				state.value = 'stop';
+			},
+			
+			onerror(err) {
+				console.log('err', err);
+				ElMessage.error(JSON.stringify(err));
+				state.value = 'stop';
+				// 最后一条重新设置
+				chatList[chatList.length - 1].content = 'network error';
+			},
+		});
+	} catch (error) {
+		console.log('error',error)
+		// 最后一条重新设置
+		chatList[chatList.length - 1].content = 'network error';
+	}
 };
+
+/** 模型列表 */
+const models = reactive<string[]>([
+	'gpt-4',
+	'gpt-4-0314',
+	'gpt-4-0613',
+	'gpt-4-32k',
+	'gpt-4-32k-0314',
+	'gpt-4-32k-0613',
+	'gpt-3.5-turbo',
+	'gpt-3.5-turbo-0301',
+	'gpt-3.5-turbo-0613',
+	'gpt-3.5-turbo-16k',
+	'gpt-3.5-turbo-16k-0613',
+]);
 
 onMounted(() => {
 	//   sendChat();
@@ -174,45 +183,22 @@ onMounted(() => {
 	max-width: 1000px;
 	margin: 0 auto;
 
-	// chat 列表
-	.chat-list-box {
-		// chat item
-		.chat-item {
+	// 工具栏
+	.tool-box {
+		margin: 16px 0;
+		.select-box {
 			display: flex;
-			padding: 24px;
-
-			// markdown内容
-			.chat-content {
-				flex: 1;
-				background-color: transparent !important;
-			}
-			// 头像
-			.chat-avatar {
-				margin-right: 32px;
-				width: 30px;
-				height: 30px;
-				box-sizing: border-box;
-				border-radius: 8px;
-				padding: 6px;
-				img {
-					width: 100%;
-					height: 100%;
-				}
-			}
-			// 头像 系统
-			&.system {
-				background-color: #f7f7f8;
-				.chat-avatar {
-					background-color: #19c37d;
-				}
-			}
-			// 头像 用户
-			&.user {
-				.chat-avatar {
-					background-color: #9a59b5;
-				}
+			align-items: center;
+			.select-tip {
+				margin-right: 8px;
+				font-size: 14px;
+				color: #666;
 			}
 		}
+	}
+
+	// chat 列表
+	.chat-list-box {
 	}
 
 	// 底部内容

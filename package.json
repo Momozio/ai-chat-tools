@@ -6,6 +6,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "start": "nuxt start",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",
     "markdown-it": "^13.0.1",
-    "pinia": "^2.1.6"
+    "pinia": "^2.1.6",
+    "uuid": "^9.0.0"
   }
 }
