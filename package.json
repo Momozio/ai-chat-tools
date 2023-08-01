@@ -18,9 +18,11 @@
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@pinia/nuxt": "^0.4.11",
     "element-plus": "^2.3.8",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",
-    "markdown-it": "^13.0.1"
+    "markdown-it": "^13.0.1",
+    "pinia": "^2.1.6"
   }
 }
