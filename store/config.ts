@@ -8,7 +8,11 @@ type IchatConfig = {
 	temperature: number;
 	top_p: number;
 };
-export const useChatConfigStore = defineStore('counter', () => {
+type IopenaiConfig = {
+	key: string;
+	apiUrl: string;
+};
+export const useChatConfigStore = defineStore('config', () => {
 	const chatConfig = ref<IchatConfig>({
 		model: 'gpt-3.5-turbo',
 		stream: true,
@@ -17,9 +21,22 @@ export const useChatConfigStore = defineStore('counter', () => {
 		temperature: 0.5,
 		top_p: 1,
 	});
+
+	const openaiConfig = ref<IopenaiConfig>({
+		key: '',
+		apiUrl: '',
+	});
+
+	/** 设置chat config */
 	function setChatConfig(config: IchatConfig) {
 		chatConfig.value = config;
 	}
 
-	return {chatConfig, setChatConfig};
+	/** 设置 openaiConfig */
+	function setOpenaiConfig(config:IopenaiConfig){
+		openaiConfig.value = config;
+		// 同步存入本地存储
+		localStorage.setItem('openaiConfig', JSON.stringify(openaiConfig.value));
+	}
+	return {chatConfig, setChatConfig, openaiConfig, setOpenaiConfig};
 });

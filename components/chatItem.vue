@@ -10,6 +10,8 @@
 			<!-- markdown 内容 -->
 			<div class="markdown-body chat-content" v-html="getMarkdown(chatData.content)"></div>
 		</div>
+		<!-- 日期时间 -->
+		<div class="date-str">{{ chatData.createTime }}</div>
 		<!-- 操作按钮组 -->
 		<div class="btn-group">
 			<el-tooltip
@@ -45,7 +47,9 @@
 				content="删除"
 				placement="bottom"
 			>
-				<button><i class="icon-delete iconfont"></i></button>
+				<button @click="emit('deleteChatItem', chatData.id)">
+					<i class="icon-delete iconfont"></i>
+				</button>
 			</el-tooltip>
 		</div>
 	</div>
@@ -63,7 +67,7 @@ const props = defineProps<{
 	state: 'loading' | 'stop' | 'wait';
 }>();
 /** emit */
-const emit = defineEmits(['rebuildChat', 'endChat']);
+const emit = defineEmits(['rebuildChat', 'endChat', 'deleteChatItem']);
 /** 初始化markdown It */
 const markdownIt: any = createMarkdownIt({
 	typographer: true,
@@ -100,7 +104,16 @@ const copyToClipboard = () => {
 
 <style lang="scss" scoped>
 .chat-item-wrap {
+	position: relative;
 	padding: 24px;
+	// 日期
+	.date-str {
+		position: absolute;
+		right: 6px;
+		bottom: 6px;
+		font-size: 12px;
+		color: #bbb;
+	}
 	.chat-item {
 		display: flex;
 
@@ -109,6 +122,7 @@ const copyToClipboard = () => {
 			flex: 1;
 			background-color: transparent !important;
 		}
+
 		// 头像
 		.chat-avatar {
 			margin-right: 32px;

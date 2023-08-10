@@ -22,4 +22,11 @@ export type Ichat = {
   id?:string;
 	role: string;
 	content: string;
+  createTime:string;
 };
+
+/** 提交的message type */
+export type IchatMessage = {
+  role: string;
+	content: string; 
+}

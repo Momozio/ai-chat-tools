@@ -12,6 +12,7 @@
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.5",
     "@nuxt/devtools": "latest",
+    "@nuxtjs/tailwindcss": "^6.8.0",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^18.17.1",
     "nuxt": "^3.6.5",
@@ -20,11 +21,14 @@
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@pinia/nuxt": "^0.4.11",
+    "axios": "^1.4.0",
     "copy-to-clipboard": "^3.3.3",
+    "deepcopy": "^2.1.0",
     "element-plus": "^2.3.8",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",
     "markdown-it": "^13.0.1",
+    "moment": "^2.29.4",
     "pinia": "^2.1.6",
     "uuid": "^9.0.0"
   }
