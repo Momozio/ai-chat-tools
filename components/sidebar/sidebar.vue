@@ -165,6 +165,8 @@ onBeforeMount(() => {
 	const localCurrentChatId = localStorage.getItem('currentChatId');
 	if (localChatHistory != null) {
 		chatHistory.value = JSON.parse(localChatHistory);
+	}else{
+		createChat()
 	}
 	if (localCurrentChatId != null) {
 		chatHistoryStore.setCurrentChatId(localCurrentChatId);
