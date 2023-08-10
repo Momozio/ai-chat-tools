@@ -3,12 +3,11 @@
 
 - 程序截图
 
-
-
  <div style="display:flex;">
-  <img src="C:/Users/MOZZ/AppData/Roaming/Typora/typora-user-images/image-20230810151006729.png" alt="image-20230810151006729" style="  zoom: 25%;" />
-  <img src="C:/Users/MOZZ/AppData/Roaming/Typora/typora-user-images/image-20230810150933209.png" alt="image-20230810150933209" style="zoom:25%;" />
+  <img src="https://gitee.com/mozz_moz/markdown-pic/raw/master/202308101523008.png" alt="image-20230810151006729" style="  zoom: 25%;" />
+  <img src="https://gitee.com/mozz_moz/markdown-pic/raw/master/202308101523738.png" style="zoom:25%;" />
  </div>
+
 
 
 ## 本地运行
