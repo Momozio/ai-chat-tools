@@ -121,6 +121,7 @@ const copyToClipboard = () => {
 		.chat-content {
 			flex: 1;
 			background-color: transparent !important;
+			overflow-x: auto;
 		}
 
 		// 头像
